@@ -8,7 +8,7 @@ Each mode sets the embedded controller's APU power mode and all three fan curves
 
 | Mode | APU power mode | CPU fans full speed at | System fan full speed at | Measured, 32 busy threads |
 |---|---|---|---|---|
-| Quiet | `quiet` | 90 °C | 88 °C | ~2.8 GHz, ~52 °C |
+| Quiet | `quiet` | 82 °C | 80 °C | ~2.8 GHz, ~52 °C; package held at ~54 W |
 | Balanced | `balanced` | 88 °C | 85 °C | not measured |
 | Performance | `performance` | 85 °C | 80 °C | ~4.2 GHz, ~93 °C |
 
@@ -44,7 +44,7 @@ It installs:
 
 ## Tune
 
-A fan curve is five temperatures (°C) at which the fan steps up to 20, 40, 60, 80 and 100 %, and five at which it steps back down. Edit `curves()` in `bin/axb35-power`, update the table in `test/axb35-power.test.sh`, run `./check.sh`, then rerun `install.sh`.
+A fan curve is five temperatures (°C) at which the fan steps up to 20, 40, 60, 80 and 100 %, and five at which it steps back down. The fans follow the embedded controller's `temp1`, which tracks the APU's Tctl with a lag. Measured CPU fan speed per level: 0 ≈ 1,000, 1 ≈ 1,760, 2 ≈ 2,440, 4 ≈ 3,610, 5 ≈ 4,120 rpm. Edit `curves()` in `bin/axb35-power`, update the table in `test/axb35-power.test.sh`, run `./check.sh`, then rerun `install.sh`.
 
 ## Uninstall
 
