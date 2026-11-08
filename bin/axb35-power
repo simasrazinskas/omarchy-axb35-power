@@ -1,0 +1,74 @@
+#!/bin/sh
+set -eu
+
+sysfs=${AXB35_SYSFS:-/sys/class/ec_su_axb35}
+state=${AXB35_STATE:-/var/lib/axb35-power/mode}
+default_mode=performance
+
+usage() {
+  echo "usage: axb35-power quiet|balanced|performance|apply|status" >&2
+  exit 2
+}
+
+curves() {
+  case $1 in
+    quiet)
+      cpu_up=60,70,78,85,90 cpu_down=55,65,73,80,85
+      sys_up=55,65,75,82,88 sys_down=50,60,70,77,83
+      ;;
+    balanced)
+      cpu_up=50,60,70,78,88 cpu_down=45,55,65,73,83
+      sys_up=45,55,65,75,85 sys_down=40,50,60,70,80
+      ;;
+    performance)
+      cpu_up=45,55,65,75,85 cpu_down=40,50,60,70,80
+      sys_up=40,50,60,70,80 sys_down=35,45,55,65,75
+      ;;
+    *) return 1 ;;
+  esac
+}
+
+saved_mode() {
+  mode=$(cat "$state" 2>/dev/null || true)
+  curves "$mode" 2>/dev/null && echo "$mode" || echo "$default_mode"
+}
+
+write() {
+  printf '%s\n' "$2" >"$sysfs/$1"
+}
+
+set_mode() {
+  curves "$1" || usage
+  [ -d "$sysfs" ] || {
+    echo "axb35-power: $sysfs not found (is the ec_su_axb35 module loaded?)" >&2
+    exit 1
+  }
+  write apu/power_mode "$1"
+  for fan in fan1 fan2; do
+    write "$fan/rampup_curve" "$cpu_up"
+    write "$fan/rampdown_curve" "$cpu_down"
+    write "$fan/mode" curve
+  done
+  write fan3/rampup_curve "$sys_up"
+  write fan3/rampdown_curve "$sys_down"
+  write fan3/mode curve
+  mkdir -p "$(dirname "$state")"
+  printf '%s\n' "$1" >"$state"
+}
+
+status() {
+  printf 'power=%s\n' "$(cat "$sysfs/apu/power_mode")"
+  printf 'saved=%s\n' "$(saved_mode)"
+  printf 'temp=%s\n' "$(cat "$sysfs/temp1/temp")"
+  for fan in fan1 fan2 fan3; do
+    printf '%s=%s\n' "$fan" "$(cat "$sysfs/$fan/rpm")"
+  done
+}
+
+[ $# -le 1 ] || usage
+case ${1:-status} in
+  quiet | balanced | performance) set_mode "$1" ;;
+  apply) set_mode "$(saved_mode)" ;;
+  status) status ;;
+  *) usage ;;
+esac

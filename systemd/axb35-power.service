@@ -1,0 +1,12 @@
+[Unit]
+Description=AXB35 EC: restore the saved power mode and fan curves
+After=systemd-modules-load.service
+Requires=systemd-modules-load.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/axb35-power apply
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

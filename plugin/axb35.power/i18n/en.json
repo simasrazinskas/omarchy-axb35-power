@@ -1,0 +1,16 @@
+{
+  "title": "Fan & power",
+  "mode": "Mode",
+  "quiet": "Quiet",
+  "balanced": "Balanced",
+  "performance": "Performance",
+  "unknown": "Unknown",
+  "temperature": "APU temperature",
+  "cpuFans": "CPU fans",
+  "systemFan": "System fan",
+  "rpm": "%1 rpm",
+  "celsius": "%1 °C",
+  "status": "%1 · %2",
+  "unavailable": "axb35-power is not installed",
+  "switchFailed": "Could not switch to %1"
+}

@@ -1,0 +1,1 @@
+%wheel ALL=(root) NOPASSWD: /usr/local/bin/axb35-power quiet, /usr/local/bin/axb35-power balanced, /usr/local/bin/axb35-power performance

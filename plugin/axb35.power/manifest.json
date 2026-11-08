@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "axb35.power",
+  "name": "Fan & power",
+  "version": "1.0.0",
+  "author": "simasrazinskas",
+  "description": "Quiet, balanced or performance mode for GMKtec EVO-X2 / Sixunited AXB35: APU power mode and fan curves",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "Fan & power",
+    "description": "Quiet, balanced or performance mode, with temperature and fan speeds",
+    "category": "System",
+    "allowMultiple": false
+  }
+}

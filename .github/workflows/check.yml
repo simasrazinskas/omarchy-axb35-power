@@ -1,0 +1,27 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - run: go install mvdan.cc/sh/v3/cmd/shfmt@v3.14.1 && echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+      - run: ./check.sh
+
+  secrets:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
