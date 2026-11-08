@@ -62,7 +62,7 @@ sudo rm -r /var/lib/axb35-power
 ./check.sh
 ```
 
-It runs the same checks as CI: `shellcheck` and `shfmt` (v3.14.1, `-i 2 -ci`) on the scripts, `jq` on the JSON, the plugin id against its folder, `visudo` on the sudoers rule, `systemd-analyze verify` on the unit, and `test/axb35-power.test.sh`, which drives the helper against a fake sysfs tree and checks every mode's writes, the boot restore and the refusals. On an Omarchy machine it also runs `omarchy plugin validate`. CI also scans the history for secrets with gitleaks.
+It runs the same checks as CI: `shellcheck` and `shfmt` (v3.14.1, `-i 2 -ci`) on the scripts, `jq` on the JSON, the plugin id against its folder, `visudo` on the sudoers rule, `systemd-analyze verify` on the unit, and `test/axb35-power.test.sh`, which drives the helper against a fake sysfs tree and checks every mode's writes, the boot restore and the refusals. On an Omarchy machine it also runs `omarchy plugin validate`. CI also scans the whole history for secrets with `gitleaks git .`.
 
 ## License
 
