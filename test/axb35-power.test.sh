@@ -36,7 +36,7 @@ while read -r mode cpu_up cpu_down sys_up sys_down; do
   check fan3/mode curve "$mode"
   check "$AXB35_STATE" "$mode" "$mode saved"
 done <<EOF
-quiet 60,70,78,85,90 55,65,73,80,85 55,65,75,82,88 50,60,70,77,83
+quiet 50,58,66,74,82 45,53,61,69,77 45,55,63,71,80 40,50,58,66,75
 balanced 50,60,70,78,88 45,55,65,73,83 45,55,65,75,85 40,50,60,70,80
 performance 45,55,65,75,85 40,50,60,70,80 40,50,60,70,80 35,45,55,65,75
 EOF

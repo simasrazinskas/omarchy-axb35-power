@@ -13,8 +13,8 @@ usage() {
 curves() {
   case $1 in
     quiet)
-      cpu_up=60,70,78,85,90 cpu_down=55,65,73,80,85
-      sys_up=55,65,75,82,88 sys_down=50,60,70,77,83
+      cpu_up=50,58,66,74,82 cpu_down=45,53,61,69,77
+      sys_up=45,55,63,71,80 sys_down=40,50,58,66,75
       ;;
     balanced)
       cpu_up=50,60,70,78,88 cpu_down=45,55,65,73,83
