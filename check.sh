@@ -18,6 +18,9 @@ step shfmt
 # shellcheck disable=SC2086
 shfmt -d -i 2 -ci $scripts
 
+step actionlint
+actionlint
+
 step json
 for f in "$plugin/manifest.json" "$plugin"/i18n/*.json; do jq empty "$f"; done
 id=$(jq -r .id "$plugin/manifest.json")
