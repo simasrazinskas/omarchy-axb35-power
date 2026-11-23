@@ -3,6 +3,8 @@ set -eu
 
 sysfs=${AXB35_SYSFS:-/sys/class/ec_su_axb35}
 state=${AXB35_STATE:-/var/lib/axb35-power/mode}
+cpufreq=${AXB35_CPUFREQ:-/sys/devices/system/cpu/cpufreq}
+core_cap_khz=4000000
 default_mode=performance
 
 usage() {
@@ -52,6 +54,12 @@ set_mode() {
   write fan3/rampup_curve "$sys_up"
   write fan3/rampdown_curve "$sys_down"
   write fan3/mode curve
+  for policy in "$cpufreq"/policy*; do
+    [ -d "$policy" ] || continue
+    max=$(cat "$policy/cpuinfo_max_freq")
+    if [ "$core_cap_khz" -lt "$max" ]; then max=$core_cap_khz; fi
+    printf '%s\n' "$max" >"$policy/scaling_max_freq"
+  done
   mkdir -p "$(dirname "$state")"
   printf '%s\n' "$1" >"$state"
 }
@@ -63,6 +71,7 @@ status() {
   for fan in fan1 fan2 fan3; do
     printf '%s=%s\n' "$fan" "$(cat "$sysfs/$fan/rpm")"
   done
+  printf 'cpu_max_khz=%s\n' "$(cat "$cpufreq/policy0/scaling_max_freq" 2>/dev/null || echo unknown)"
 }
 
 [ $# -le 1 ] || usage
