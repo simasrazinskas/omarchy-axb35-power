@@ -12,7 +12,7 @@ Each mode sets the embedded controller's APU power mode and all three fan curves
 | Balanced | `balanced` | 88 °C | 85 °C | not measured |
 | Performance | `performance` | 85 °C | 80 °C | ~4.2 GHz, ~93 °C |
 
-Every mode also caps each CPU core at 4 GHz (`core_cap_khz` in `bin/axb35-power`; the chip's own maximum is ~5.19 GHz). On the stock cooler one thread at full boost reaches 75–84 °C at under 30 W and holds the CPU fans near full speed; at 4 GHz a core needs far less power, single-thread work runs at most ~20 % slower, and all-core loads are already held lower by the APU power mode. `axb35-power status` shows the cap as `cpu_max_khz`.
+Quiet and balanced also cap each CPU core at 4 GHz (`core_cap_khz` in `bin/axb35-power`); performance leaves each core its own maximum (~5.19 GHz). On the stock cooler one thread at full boost reaches 75–84 °C at under 30 W and holds the CPU fans near full speed; at 4 GHz a core needs far less power, single-thread work runs at most ~20 % slower, and all-core loads are already held lower by the APU power mode. `axb35-power status` shows the cap as `cpu_max_khz`.
 
 The chosen mode survives a reboot. The front P-mode button still changes the APU power mode on its own; the bar always shows what the embedded controller reports.
 

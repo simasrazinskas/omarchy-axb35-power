@@ -4,7 +4,6 @@ set -eu
 sysfs=${AXB35_SYSFS:-/sys/class/ec_su_axb35}
 state=${AXB35_STATE:-/var/lib/axb35-power/mode}
 cpufreq=${AXB35_CPUFREQ:-/sys/devices/system/cpu/cpufreq}
-core_cap_khz=4000000
 default_mode=performance
 
 usage() {
@@ -17,14 +16,17 @@ curves() {
     quiet)
       cpu_up=50,58,66,74,82 cpu_down=45,53,61,69,77
       sys_up=45,55,63,71,80 sys_down=40,50,58,66,75
+      core_cap_khz=4000000
       ;;
     balanced)
       cpu_up=50,60,70,78,88 cpu_down=45,55,65,73,83
       sys_up=45,55,65,75,85 sys_down=40,50,60,70,80
+      core_cap_khz=4000000
       ;;
     performance)
       cpu_up=45,55,65,75,85 cpu_down=40,50,60,70,80
       sys_up=40,50,60,70,80 sys_down=35,45,55,65,75
+      core_cap_khz=
       ;;
     *) return 1 ;;
   esac
@@ -57,7 +59,7 @@ set_mode() {
   for policy in "$cpufreq"/policy*; do
     [ -d "$policy" ] || continue
     max=$(cat "$policy/cpuinfo_max_freq")
-    if [ "$core_cap_khz" -lt "$max" ]; then max=$core_cap_khz; fi
+    if [ -n "$core_cap_khz" ] && [ "$core_cap_khz" -lt "$max" ]; then max=$core_cap_khz; fi
     printf '%s\n' "$max" >"$policy/scaling_max_freq"
   done
   mkdir -p "$(dirname "$state")"

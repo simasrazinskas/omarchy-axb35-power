@@ -33,8 +33,8 @@ check() {
 
 while read -r mode cpu_up cpu_down sys_up sys_down cpu_max; do
   "$tool" "$mode"
-  check "$AXB35_CPUFREQ/policy0/scaling_max_freq" "$cpu_max" "$mode: every core capped at 4 GHz"
-  check "$AXB35_CPUFREQ/policy1/scaling_max_freq" "$cpu_max" "$mode: every policy capped"
+  check "$AXB35_CPUFREQ/policy0/scaling_max_freq" "$cpu_max" "$mode: every core at the mode's maximum"
+  check "$AXB35_CPUFREQ/policy1/scaling_max_freq" "$cpu_max" "$mode: every policy at the mode's maximum"
   check apu/power_mode "$mode" "$mode"
   check fan1/rampup_curve "$cpu_up" "$mode"
   check fan2/rampdown_curve "$cpu_down" "$mode"
@@ -46,7 +46,7 @@ while read -r mode cpu_up cpu_down sys_up sys_down cpu_max; do
 done <<EOF
 quiet 50,58,66,74,82 45,53,61,69,77 45,55,63,71,80 40,50,58,66,75 4000000
 balanced 50,60,70,78,88 45,55,65,73,83 45,55,65,75,85 40,50,60,70,80 4000000
-performance 45,55,65,75,85 40,50,60,70,80 40,50,60,70,80 35,45,55,65,75 4000000
+performance 45,55,65,75,85 40,50,60,70,80 40,50,60,70,80 35,45,55,65,75 5187500
 EOF
 
 echo 3000000 >"$AXB35_CPUFREQ/policy1/cpuinfo_max_freq"
@@ -68,7 +68,7 @@ rm "$AXB35_STATE"
 check apu/power_mode performance "apply defaults to performance with no state file"
 
 out=$("$tool" status)
-want=$(printf 'power=performance\nsaved=performance\ntemp=41\nfan1=1758\nfan2=1758\nfan3=1758\ncpu_max_khz=4000000')
+want=$(printf 'power=performance\nsaved=performance\ntemp=41\nfan1=1758\nfan2=1758\nfan3=1758\ncpu_max_khz=5187500')
 [ "$out" = "$want" ] || {
   echo "FAIL status: $out"
   fail=1
